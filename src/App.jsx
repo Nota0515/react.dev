@@ -1,73 +1,63 @@
 import { useState } from "react";
 import React from "react";
 
-const initialList = [
-  { id: 0, title: 'Gher baitho', seen: false },
-  { id: 1, title: 'Job dhundo', seen: false },
-  { id: 2, title: 'product develop kero', seen: false },
-];
+
+//challange 2 
+const initialProducts = [{
+  id: 0,
+  name: 'Baklava',
+  count: 1,
+}, {
+  id: 1,
+  name: 'Cheese',
+  count: 5,
+}, {
+  id: 2,
+  name: 'Spaghetti',
+  count: 2,
+}];
 
 const App = () => {
 
-  const [myList , setMylist] = useState(initialList);
-  const [yourList, setYourList] = useState(initialList);
+  const [products, setProducts] = useState(initialProducts);
 
-  function HandleMylist(itemid , checked){
-    const newlist = myList.map(item => {
-      if (item.id === itemid ){
-        return {...item , seen:checked};
+  const handleIncrease = (productId) => {
+    setProducts(products.map(item => {
+      if (item.id === productId) {
+        return {...item , count : item.count +1 }
+      }else {
+        return item
       }
-
-      return item ; 
-    });
-
-    setMylist(newlist)
+    }))
   };
 
-  function MandleYourList( itemid , checked){
-    //we wil also de something here
-    const newList = yourList.map(item => {
-      if (item.id === itemid ){
-        return {...item , seen:checked};
+  const handleDecrease = (productId) => {
+    let newList = products.map(item => {
+      if (item.id === productId){
+        return {...item , count : item.count - 1};
+      }else {
+        return item;
       }
-
-      return item;
     })
 
-    setYourList(newList);
+    newList = newList.filter(item => item.count > 0);
+    setProducts(newList);
   };
-
 
   return (
     <div>
-      <h1>This is our Trip Plan</h1>  
-      <h2> Akhilesh Trip plan </h2>
-      <YourList List={myList} onToggle={HandleMylist} />
-      <h2>Friend List</h2>
-      <YourList List={yourList} onToggle={MandleYourList} />
+      <h1>This is our Products</h1>
+      <ul>
+        {products.map(product => (
+          <li key={product.id}>
+            <button onClick={() => { handleIncrease(product.id) }} className="p-2 mr-2 border-2">+</button>
+            {product.count} {product.name}
+            <button onClick={() => { handleDecrease(product.id) }} className="p-2 ml-2 border-2">-</button>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
 
-const YourList = ({List , onToggle }) => {
-  return (
-    <ul>
-      {List.map(item => (
-        <li
-        key={item.id}
-        >
-          <label>
-            <input type="checkbox"
-             checked={item.seen} 
-             onChange={
-              e => {onToggle(item.id , e.target.checked);
-              }} />
-          </label>
-          {item.title}
-        </li>
-      ))}
-    </ul>
-  )
-};
-
-export default App
+export default App;
