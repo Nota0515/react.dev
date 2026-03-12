@@ -1,0 +1,39 @@
+import { useState } from "react";
+
+const initialArtists = [
+  { id: 0, name: 'Marta Colvin Andrade' },
+  { id: 1, name: 'Lamidi Olonade Fakeye'},
+  { id: 2, name: 'Louise Nevelson'},
+];
+
+export default function Form() {
+  const [name , setName ] = useState('');
+  const [ artists , setArtists ] = useState(initialArtists)
+
+
+  function handleClick() {
+    const newArray = [...artists];
+    newArray.reverse();
+    setArtists(newArray);
+  };
+
+
+
+  return (
+     <>
+     <h1>Hi inspiring</h1>
+     <input
+     value={name}
+     onChange={e => setName(e.target.value)}
+     />
+     <button onClick={handleClick}>
+      Insert
+     </button>
+     <ul>
+      {artists.map(artist => (
+        <dir key={artist.id}>{artist.name}</dir>
+      ))}
+     </ul>
+    </>
+  );
+}
