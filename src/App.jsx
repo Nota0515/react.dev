@@ -1,63 +1,52 @@
 import { useState } from "react";
-import React from "react";
+import TaskList from "./TaskList";
+import AddTodos from "./AddTodos";
+
+//challange 3
+let nextId = 3;
+const initialTodos = [
+  { id: 0, title: 'Buy milk', done: true },
+  { id: 1, title: 'Eat tacos', done: false },
+  { id: 2, title: 'Brew tea', done: false },
+];
 
 
-//challange 2 
-const initialProducts = [{
-  id: 0,
-  name: 'Baklava',
-  count: 1,
-}, {
-  id: 1,
-  name: 'Cheese',
-  count: 5,
-}, {
-  id: 2,
-  name: 'Spaghetti',
-  count: 2,
-}];
+export default function TaskApp() {
+  const [todos, setTodos] = useState(initialTodos);
 
-const App = () => {
+  function handleAddTodo(title) {
+	const newTodos = [...todos , 
+    {id : nextId++ , title: title , done: false}
+  ]
 
-  const [products, setProducts] = useState(initialProducts);
+  setTodos(newTodos);
+  }
 
-  const handleIncrease = (productId) => {
-    setProducts(products.map(item => {
-      if (item.id === productId) {
-        return {...item , count : item.count +1 }
-      }else {
-        return item
+  function handleChangeTodo(nextTodo) {
+    const newTodos = todos.map(todo => {
+      if(todo.id === nextTodo.id){
+        return { ...todo , title: nextTodo.title , done: nextTodo.done};
+      }else{
+        return todo;
       }
-    }))
-  };
+    });
 
-  const handleDecrease = (productId) => {
-    let newList = products.map(item => {
-      if (item.id === productId){
-        return {...item , count : item.count - 1};
-      }else {
-        return item;
-      }
-    })
+    setTodos(newTodos);
+  }
 
-    newList = newList.filter(item => item.count > 0);
-    setProducts(newList);
-  };
+  function handleDeleteTodo(todoId) {
+    const newTodos = todos.filter(todo => todo.id != todoId );
+    setTodos(newTodos);
+  }
 
   return (
-    <div>
-      <h1>This is our Products</h1>
-      <ul>
-        {products.map(product => (
-          <li key={product.id}>
-            <button onClick={() => { handleIncrease(product.id) }} className="p-2 mr-2 border-2">+</button>
-            {product.count} {product.name}
-            <button onClick={() => { handleDecrease(product.id) }} className="p-2 ml-2 border-2">-</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <AddTodos onAddTodo={handleAddTodo} />
+      <TaskList
+      todos={todos}
+      onChangeTodo={handleChangeTodo}
+      onDeleteTodo={handleDeleteTodo}
+      />
+    </>
   )
 }
-
-export default App;
